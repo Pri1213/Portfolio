@@ -13,7 +13,7 @@ import ModelReportCard from '../components/f1/ModelReportCard.jsx'
 export default function F1() {
   const year = new Date().getFullYear()
   return (
-    <main className="pt-28 pb-24 min-h-screen grid-overlay">
+    <main id="main-content" className="pt-28 pb-24 min-h-screen grid-overlay">
       <div className="max-w-6xl mx-auto px-5">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

@@ -10,6 +10,11 @@ const STRINGS = {
       viewWork: 'View My Work',
       cv: 'Download CV',
       f1: 'F1 Live',
+      telemetry: [
+        { label: 'RECOVERED', value: '£600K' },
+        { label: 'DBT MODELS', value: '50+' },
+        { label: 'COUNTRIES', value: '44' },
+      ],
     },
     about: {
       eyebrow: '// about',
@@ -37,6 +42,8 @@ const STRINGS = {
       title: "Let's talk.",
       available: 'Available for new opportunities in London.',
       cv: 'Download CV',
+      copy: 'Copy email',
+      copied: 'Copied',
     },
     quiz: {
       intro: 'Five questions. Zero stakes. One slightly biased quizmaster.',
@@ -101,6 +108,11 @@ const STRINGS = {
       viewWork: 'Voir mon travail',
       cv: 'Télécharger le CV',
       f1: 'F1 en direct',
+      telemetry: [
+        { label: 'RETROUVÉES', value: '600 K£' },
+        { label: 'MODÈLES DBT', value: '50+' },
+        { label: 'PAYS', value: '44' },
+      ],
     },
     about: {
       eyebrow: '// à propos',
@@ -128,6 +140,8 @@ const STRINGS = {
       title: 'Parlons-en.',
       available: 'Disponible pour de nouvelles opportunités à Londres.',
       cv: 'Télécharger le CV',
+      copy: 'Copier l’email',
+      copied: 'Copié',
     },
     quiz: {
       intro: 'Cinq questions. Zéro enjeu. Une quizmaster légèrement partiale.',

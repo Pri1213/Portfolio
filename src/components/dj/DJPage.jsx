@@ -25,7 +25,7 @@ const VIBES = ['Afrobeats', 'Amapiano', 'Electronic', 'Whatever turns a kitchen 
 
 export default function DJPage() {
   return (
-    <main className="pt-28 pb-24 min-h-screen">
+    <main id="main-content" className="pt-28 pb-24 min-h-screen">
       <div className="max-w-4xl mx-auto px-5">
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <p className="eyebrow mb-3">// off the clock</p>

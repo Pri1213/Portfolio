@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, useScroll } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { AnimatePresence, motion, useScroll } from 'framer-motion'
+import { Menu, X, Download } from 'lucide-react'
 import { useLang } from '../../i18n.jsx'
 import SoundToggle from '../../experience/SoundToggle.jsx'
 
@@ -14,7 +14,7 @@ function LangToggle({ className = '' }) {
           key={l}
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
-          className={`px-2 py-1 rounded uppercase transition-colors ${
+          className={`px-2.5 py-1.5 rounded uppercase transition-colors cursor-pointer ${
             lang === l ? 'text-accent-glow bg-accent/15 border border-accent/40' : 'text-midgrey hover:text-offwhite border border-transparent'
           }`}
         >
@@ -23,6 +23,20 @@ function LangToggle({ className = '' }) {
       ))}
     </div>
   )
+}
+
+const menuVariants = {
+  closed: { height: 0, opacity: 0, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } },
+  open: {
+    height: 'auto',
+    opacity: 1,
+    transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.05, delayChildren: 0.08 },
+  },
+}
+
+const itemVariants = {
+  closed: { opacity: 0, x: -14 },
+  open: { opacity: 1, x: 0, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } },
 }
 
 export default function Navbar() {
@@ -44,6 +58,14 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => setOpen(false), [pathname])
+
+  // Lock page scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   return (
     <header
@@ -68,7 +90,8 @@ export default function Navbar() {
             <Link
               key={l.to}
               to={l.to}
-              className={`text-sm font-medium transition-colors ${
+              data-active={pathname === l.to}
+              className={`nav-link text-sm font-medium transition-colors ${
                 pathname === l.to
                   ? l.accent
                     ? 'text-f1red'
@@ -92,7 +115,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="md:hidden text-offwhite p-2"
+          className="md:hidden text-offwhite p-2.5 -mr-2.5 cursor-pointer"
           onClick={() => setOpen(!open)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
@@ -101,23 +124,48 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {open && (
-        <div className="md:hidden border-t border-gridline px-5 py-4 flex flex-col gap-4 bg-dark/95">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={`text-base ${pathname === l.to ? 'text-accent-glow' : 'text-midgrey'}`}
-            >
-              {l.label}
-            </Link>
-          ))}
-          <a href="/cv/Priyasnee_Boolaky_CV.pdf" download className="text-base text-accent-glow">
-            {t.nav.cv}
-          </a>
-          <LangToggle />
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            variants={menuVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            className="md:hidden border-t border-gridline bg-dark/95 overflow-hidden"
+          >
+            <div className="px-5 py-4 flex flex-col gap-1">
+              {links.map((l) => (
+                <motion.div key={l.to} variants={itemVariants}>
+                  <Link
+                    to={l.to}
+                    className={`flex items-center gap-2 py-3 text-base border-l-2 pl-3 transition-colors ${
+                      pathname === l.to
+                        ? 'text-accent-glow border-accent-glow'
+                        : 'text-midgrey border-transparent hover:text-offwhite'
+                    }`}
+                  >
+                    {l.accent && <span className="inline-block w-1.5 h-1.5 rounded-full bg-f1red drs-pulse" />}
+                    {l.label}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div variants={itemVariants}>
+                <a
+                  href="/cv/Priyasnee_Boolaky_CV.pdf"
+                  download
+                  className="flex items-center gap-2 py-3 pl-3 text-base text-accent-glow border-l-2 border-transparent"
+                >
+                  <Download size={16} /> {t.nav.cv}
+                </a>
+              </motion.div>
+              <motion.div variants={itemVariants} className="flex items-center gap-4 pt-3 pl-3">
+                <SoundToggle />
+                <LangToggle />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

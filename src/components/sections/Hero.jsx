@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { ArrowDown, Download, Github, Linkedin, Mail, Flag } from 'lucide-react'
 import useIsMobile from '../../hooks/useIsMobile.js'
 import DRSButton from '../../experience/DRSButton.jsx'
+import KineticTitle from '../ui/KineticTitle.jsx'
+import MagneticButton from '../ui/MagneticButton.jsx'
+import TelemetryStrip from '../ui/TelemetryStrip.jsx'
 import { useLang } from '../../i18n.jsx'
 
 const HeroScene = lazy(() => import('../three/HeroScene.jsx'))
@@ -27,7 +30,7 @@ export default function Hero() {
         </Suspense>
       )}
 
-      <div className="relative z-10 text-center px-5 max-w-4xl">
+      <div className="relative z-10 text-center px-5 max-w-5xl py-28">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -37,16 +40,14 @@ export default function Hero() {
           {t.hero.status}
         </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.7 }}
+        <KineticTitle
+          label="Priyasnee Keerti Boolaky"
           className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl text-offwhite leading-[0.95]"
-        >
-          PRIYASNEE
-          <br />
-          <span className="text-accent-glow">KEERTI BOOLAKY</span>
-        </motion.h1>
+          lines={[
+            { text: 'PRIYASNEE' },
+            { text: 'KEERTI BOOLAKY', className: 'text-accent-glow' },
+          ]}
+        />
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -72,26 +73,32 @@ export default function Hero() {
           transition={{ delay: 0.95, duration: 0.6 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
-          <a
-            href="#experience"
-            className="btn-f1 px-7 py-3 bg-accent text-offwhite hover:bg-accent-glow hover:shadow-glow-blue flex items-center gap-2"
-          >
-            {t.hero.viewWork} <ArrowDown size={16} />
-          </a>
-          <a
-            href="/cv/Priyasnee_Boolaky_CV.pdf"
-            download
-            className="btn-f1 px-7 py-3 border border-accent text-accent-glow hover:bg-accent/15 hover:shadow-glow-blue flex items-center gap-2"
-          >
-            {t.hero.cv} <Download size={16} />
-          </a>
-          <Link
-            to="/f1"
-            className="btn-f1 px-7 py-3 border border-f1red/60 text-f1red hover:bg-f1red/10 hover:shadow-glow-red flex items-center gap-2"
-          >
-            <span className="w-2 h-2 rounded-full bg-f1red drs-pulse" />
-            {t.hero.f1} <Flag size={16} />
-          </Link>
+          <MagneticButton>
+            <a
+              href="#experience"
+              className="btn-f1 px-7 py-3 bg-accent text-offwhite hover:bg-accent-glow hover:shadow-glow-blue flex items-center gap-2"
+            >
+              {t.hero.viewWork} <ArrowDown size={16} />
+            </a>
+          </MagneticButton>
+          <MagneticButton>
+            <a
+              href="/cv/Priyasnee_Boolaky_CV.pdf"
+              download
+              className="btn-f1 px-7 py-3 border border-accent text-accent-glow hover:bg-accent/15 hover:shadow-glow-blue flex items-center gap-2"
+            >
+              {t.hero.cv} <Download size={16} />
+            </a>
+          </MagneticButton>
+          <MagneticButton>
+            <Link
+              to="/f1"
+              className="btn-f1 px-7 py-3 border border-f1red/60 text-f1red hover:bg-f1red/10 hover:shadow-glow-red flex items-center gap-2"
+            >
+              <span className="w-2 h-2 rounded-full bg-f1red drs-pulse" />
+              {t.hero.f1} <Flag size={16} />
+            </Link>
+          </MagneticButton>
         </motion.div>
 
         <motion.div
@@ -106,6 +113,8 @@ export default function Hero() {
         </motion.div>
 
         <DRSButton />
+
+        <TelemetryStrip sectors={t.hero.telemetry} />
       </div>
     </section>
   )

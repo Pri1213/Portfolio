@@ -57,6 +57,14 @@ const GROUPS = [
   },
 ]
 
+/* F1 timing-screen tiers: purple = session best, green = personal best,
+   blue = on pace. Same rules the broadcast uses for sector times. */
+function tierClasses(weight) {
+  if (weight >= 90) return 'bg-sector-purple shadow-glow-purple'
+  if (weight >= 75) return 'bg-sector-green shadow-glow-green'
+  return 'bg-accent'
+}
+
 function SkillRow({ skill, delay }) {
   return (
     <motion.div
@@ -72,19 +80,37 @@ function SkillRow({ skill, delay }) {
           {skill.name}
         </span>
       </div>
-      <div className="h-1 rounded bg-gridline overflow-hidden">
+      <div className="h-1.5 rounded bg-gridline overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${skill.weight}%` }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, delay: delay + 0.15, ease: 'easeOut' }}
-          className={`h-full rounded ${skill.highlight ? 'bg-accent-glow shadow-glow-blue' : 'bg-accent'}`}
+          className={`h-full rounded ${tierClasses(skill.weight)}`}
         />
       </div>
-      <p className="mt-1.5 text-xs text-midgrey opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      {/* Always visible on touch screens; revealed on hover where a pointer exists */}
+      <p className="mt-1.5 text-xs text-midgrey sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200">
         {skill.note}
       </p>
     </motion.div>
+  )
+}
+
+function TierLegend() {
+  const tiers = [
+    { colour: 'bg-sector-purple', label: 'SESSION BEST' },
+    { colour: 'bg-sector-green', label: 'PERSONAL BEST' },
+    { colour: 'bg-accent', label: 'ON PACE' },
+  ]
+  return (
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 -mt-7 mb-8">
+      {tiers.map((t) => (
+        <span key={t.label} className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-midgrey">
+          <i className={`block w-3 h-1.5 rounded-sm ${t.colour}`} aria-hidden="true" /> {t.label}
+        </span>
+      ))}
+    </div>
   )
 }
 
@@ -94,6 +120,7 @@ export default function Skills() {
     <section id="skills" className="relative py-24 bg-navy/30 grid-overlay">
       <div className="max-w-6xl mx-auto px-5">
         <SectionHeading eyebrow={t.sections.skills.eyebrow} title={t.sections.skills.title} />
+        <TierLegend />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {GROUPS.map((group, gi) => (
             <motion.div

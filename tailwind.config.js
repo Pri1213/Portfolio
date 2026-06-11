@@ -13,6 +13,12 @@ export default {
         offwhite: '#F0F0F5',
         midgrey: '#8888A0',
         gridline: '#1E1E2E',
+        // F1 timing-screen sector colours
+        sector: {
+          purple: '#B14BF4', // session best
+          green: '#2EE6A8', // personal best
+          yellow: '#FFD12E', // on pace
+        },
       },
       fontFamily: {
         display: ['"Saira Condensed"', 'sans-serif'],
@@ -23,6 +29,8 @@ export default {
         'glow-blue': '0 0 20px rgba(46, 95, 163, 0.4)',
         'glow-blue-lg': '0 0 40px rgba(74, 127, 212, 0.35)',
         'glow-red': '0 0 20px rgba(225, 6, 0, 0.45)',
+        'glow-purple': '0 0 14px rgba(177, 75, 244, 0.45)',
+        'glow-green': '0 0 14px rgba(46, 230, 168, 0.4)',
       },
     },
   },

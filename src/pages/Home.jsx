@@ -15,7 +15,7 @@ import Contact from '../components/sections/Contact.jsx'
 
 export default function Home() {
   return (
-    <main>
+    <main id="main-content">
       <BootSequence />
       <Achievements />
       <Hero />
