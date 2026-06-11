@@ -3,4 +3,3 @@ dist
 .netlify
 .env
 .DS_Store
-.codex/

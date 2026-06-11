@@ -2,6 +2,8 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { LangProvider } from './i18n.jsx'
 import BobbyEasterEgg from './components/ui/BobbyEasterEgg.jsx'
+import F1DriveBy from './experience/F1DriveBy.jsx'
+import RecruiterMode from './components/ui/RecruiterMode.jsx'
 import Navbar from './components/layout/Navbar.jsx'
 import Footer from './components/layout/Footer.jsx'
 import Home from './pages/Home.jsx'
@@ -29,6 +31,8 @@ export default function App() {
       </Routes>
       <Footer />
       <BobbyEasterEgg />
+      <F1DriveBy />
+      <RecruiterMode />
     </div>
     </LangProvider>
   )

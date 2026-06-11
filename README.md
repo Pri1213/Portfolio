@@ -94,7 +94,7 @@ The DJ page can show your real Spotify activity: currently playing track (with a
 2. Mint a refresh token locally (your client secret never leaves your machine):
    ```bash
    SPOTIFY_CLIENT_ID=3e0a5913ad80415383daf0d33c9bfb1f \
-   SPOTIFY_CLIENT_SECRET=c1922d403f3f480792f8a5180a88872e \
+   SPOTIFY_CLIENT_SECRET=your_secret_here \
    node scripts/get-refresh-token.js
    ```
    Open the printed URL, approve, and copy the refresh token from the terminal.

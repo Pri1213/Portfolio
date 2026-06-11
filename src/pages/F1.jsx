@@ -6,6 +6,9 @@ import LastRaceResults from '../components/f1/LastRaceResults.jsx'
 import ChampionshipChart from '../components/f1/ChampionshipChart.jsx'
 import PriyasneePicks from '../components/f1/PriyasneePicks.jsx'
 import MaxSimulator from '../components/f1/MaxSimulator.jsx'
+import StrategyOptimizer from '../components/f1/StrategyOptimizer.jsx'
+import RaceForecast from '../components/f1/RaceForecast.jsx'
+import ModelReportCard from '../components/f1/ModelReportCard.jsx'
 
 export default function F1() {
   const year = new Date().getFullYear()
@@ -35,6 +38,9 @@ export default function F1() {
           <PriyasneePicks />
           <ChampionshipChart />
           <MaxSimulator />
+          <StrategyOptimizer />
+          <RaceForecast />
+          <ModelReportCard />
         </div>
 
         <p className="mt-8 font-mono text-xs text-midgrey">
