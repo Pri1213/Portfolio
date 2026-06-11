@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowDown, Download, Github, Linkedin, Mail, Flag } from 'lucide-react'
 import useIsMobile from '../../hooks/useIsMobile.js'
+import DRSButton from '../../experience/DRSButton.jsx'
 import { useLang } from '../../i18n.jsx'
 
 const HeroScene = lazy(() => import('../three/HeroScene.jsx'))
@@ -103,6 +104,8 @@ export default function Hero() {
           <a href="https://github.com/Pri1213" target="_blank" rel="noreferrer" aria-label="GitHub" className="text-midgrey hover:text-accent-glow transition-colors"><Github size={20} /></a>
           <a href="mailto:priyasneeboolaky@gmail.com" aria-label="Email" className="text-midgrey hover:text-accent-glow transition-colors"><Mail size={20} /></a>
         </motion.div>
+
+        <DRSButton />
       </div>
     </section>
   )

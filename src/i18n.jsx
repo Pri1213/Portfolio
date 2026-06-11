@@ -6,7 +6,7 @@ const STRINGS = {
     hero: {
       status: 'SYSTEMS ONLINE',
       role: 'Analytics Engineer',
-      quote: '“I build data infrastructure that businesses rely on.”',
+      quote: 'One engineer. An entire data platform. £600K found along the way.',
       viewWork: 'View My Work',
       cv: 'Download CV',
       f1: 'F1 Live',
@@ -97,7 +97,7 @@ const STRINGS = {
     hero: {
       status: 'SYSTÈMES EN LIGNE',
       role: 'Analytics Engineer',
-      quote: '« Je construis des infrastructures de données sur lesquelles les entreprises peuvent compter. »',
+      quote: 'Une ingénieure. Une plateforme complète. 600 K£ retrouvées en chemin.',
       viewWork: 'Voir mon travail',
       cv: 'Télécharger le CV',
       f1: 'F1 en direct',
