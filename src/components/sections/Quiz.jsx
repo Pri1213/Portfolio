@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, Flag, RotateCcw, X } from 'lucide-react'
 import { useLang } from '../../i18n.jsx'
+import { beep } from '../../experience/sound.js'
 
 /**
  * "The Paddock Quiz" — five multiple-choice questions, each revealing a
@@ -30,7 +31,13 @@ export default function Quiz() {
   const pick = (i) => {
     if (picked !== null) return
     setPicked(i)
-    if (i === question.answer) setScore((s) => s + 1)
+    if (i === question.answer) {
+      setScore((s) => s + 1)
+      beep(980, 0.08, 0.05)
+      setTimeout(() => beep(1320, 0.1, 0.05), 90)
+    } else {
+      beep(220, 0.18, 0.05, 'sawtooth')
+    }
   }
 
   const advance = () => {

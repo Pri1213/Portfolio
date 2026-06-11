@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { beep } from '../../experience/sound.js'
 
 const LINES = [
   '> INITIALISING ANALYTICS ENGINE...',
@@ -10,53 +11,69 @@ const LINES = [
 ]
 
 const EASE_F1 = [0.16, 1, 0.3, 1]
+const HARD_LIMIT_MS = 6500 // no matter what happens, the page WILL appear
+
+function safeSession(action, key, value) {
+  try {
+    if (action === 'get') return sessionStorage.getItem(key)
+    sessionStorage.setItem(key, value)
+  } catch {
+    return null // private browsing — just play the boot every time
+  }
+}
 
 /**
- * Race-start boot sequence. Plays once per session:
- *   1. Cockpit lines type out
- *   2. Five red start lights illuminate one by one
- *   3. Lights hold... then OUT — and the page launches
- * Skipped under prefers-reduced-motion. Click anywhere to skip.
+ * Race-start boot. One linear timeline, every step scheduled up front,
+ * a hard fail-safe dismiss, and zero interdependent effects — this
+ * sequence cannot strand the visitor.
  */
 export default function BootSequence() {
   const [show, setShow] = useState(() => {
     if (typeof window === 'undefined') return false
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    return !reduced && !sessionStorage.getItem('booted')
+    return !reduced && !safeSession('get', 'booted')
   })
   const [visibleLines, setVisibleLines] = useState(0)
-  const [lights, setLights] = useState(0) // 0..5 lit, -1 = lights out
-
-  // Phase 1: type the lines
-  useEffect(() => {
-    if (!show || visibleLines >= LINES.length) return
-    const t = setTimeout(() => setVisibleLines((n) => n + 1), 330)
-    return () => clearTimeout(t)
-  }, [show, visibleLines])
-
-  // Phase 2: start lights
-  useEffect(() => {
-    if (!show || visibleLines < LINES.length) return
-    if (lights < 5) {
-      const t = setTimeout(() => setLights((l) => l + 1), 420)
-      return () => clearTimeout(t)
-    }
-    // all five lit — random F1-style hold, then lights out
-    const hold = setTimeout(() => setLights(-1), 600 + Math.random() * 700)
-    return () => clearTimeout(hold)
-  }, [show, visibleLines, lights])
-
-  // Phase 3: lights out → dismiss
-  useEffect(() => {
-    if (lights !== -1) return
-    const t = setTimeout(() => dismiss(), 450)
-    return () => clearTimeout(t)
-  }, [lights])
+  const [lights, setLights] = useState(0) // 0..5 lit, -1 = out
+  const timers = useRef([])
 
   const dismiss = () => {
-    sessionStorage.setItem('booted', '1')
+    safeSession('set', 'booted', '1')
+    timers.current.forEach(clearTimeout)
     setShow(false)
   }
+
+  useEffect(() => {
+    if (!show) return
+    const T = timers.current
+    const at = (ms, fn) => T.push(setTimeout(fn, ms))
+
+    // Phase 1: lines, 330ms apart
+    LINES.forEach((_, i) => at(330 * (i + 1), () => setVisibleLines(i + 1)))
+
+    // Phase 2: lights, one per 420ms after the lines
+    const lightsStart = 330 * LINES.length + 250
+    for (let i = 1; i <= 5; i++) {
+      at(lightsStart + 420 * i, () => {
+        setLights(i)
+        beep(420 + i * 60, 0.09, 0.05) // rising start-light tones (if sound on)
+      })
+    }
+
+    // Phase 3: random F1 hold, lights out, go
+    const hold = 600 + Math.random() * 700
+    const outAt = lightsStart + 420 * 5 + hold
+    at(outAt, () => {
+      setLights(-1)
+      beep(1180, 0.18, 0.06) // lights-out tone
+    })
+    at(outAt + 500, dismiss)
+
+    // FAIL-SAFE: whatever happens above, the page appears
+    at(HARD_LIMIT_MS, dismiss)
+
+    return () => T.forEach(clearTimeout)
+  }, [show])
 
   return (
     <AnimatePresence>
@@ -68,22 +85,20 @@ export default function BootSequence() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.45, ease: EASE_F1 }}
         >
-          {/* Start lights gantry */}
           <div className="flex gap-3 sm:gap-4 mb-12" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <motion.span
-                key={i}
-                className="w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-gridline"
-                animate={{
-                  backgroundColor: lights === -1 ? '#111118' : lights > i ? '#E10600' : '#111118',
-                  boxShadow:
-                    lights !== -1 && lights > i
-                      ? '0 0 24px rgba(225,6,0,0.8), 0 0 60px rgba(225,6,0,0.35)'
-                      : '0 0 0 rgba(0,0,0,0)',
-                }}
-                transition={{ duration: 0.12 }}
-              />
-            ))}
+            {[1, 2, 3, 4, 5].map((i) => {
+              const lit = lights !== -1 && lights >= i
+              return (
+                <span
+                  key={i}
+                  className="w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-gridline transition-colors duration-100"
+                  style={{
+                    backgroundColor: lit ? '#E10600' : '#111118',
+                    boxShadow: lit ? '0 0 24px rgba(225,6,0,0.8), 0 0 60px rgba(225,6,0,0.35)' : 'none',
+                  }}
+                />
+              )
+            })}
           </div>
 
           <div className="font-mono text-sm sm:text-base text-accent-glow space-y-2 px-6 text-left min-h-[160px]">
@@ -93,11 +108,7 @@ export default function BootSequence() {
               </motion.p>
             ))}
             {lights === -1 && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="font-display italic uppercase text-f1red text-lg pt-2"
-              >
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-display italic uppercase text-f1red text-lg pt-2">
                 Lights out and away we go.
               </motion.p>
             )}

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, useScroll } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { useLang } from '../../i18n.jsx'
+import SoundToggle from '../../experience/SoundToggle.jsx'
 
 function LangToggle({ className = '' }) {
   const { lang, setLang } = useLang()
@@ -79,6 +80,7 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+          <SoundToggle />
           <LangToggle />
           <a
             href="/cv/Priyasnee_Boolaky_CV.pdf"

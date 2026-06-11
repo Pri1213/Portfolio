@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { engineRev } from './sound.js'
 
 /**
  * An F1 car randomly (but not really — every 25–55s, plus once shortly
@@ -43,6 +44,7 @@ export default function F1DriveBy() {
         if (!document.hidden) {
           setRun((r) => r + 1)
           setActive(true)
+          engineRev()
           setTimeout(() => setActive(false), 2600)
         }
         schedule(25000 + Math.random() * 30000)
